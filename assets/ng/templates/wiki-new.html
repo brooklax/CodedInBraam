@@ -1,0 +1,25 @@
+<p>Create a new Wiki</p>
+<form name="newWikiForm">
+  <md-input-container>
+    <label>Title</label>
+    <input required name="title" ng-model="wiki.title">
+    <div ng-messages="newWikiForm.title.$error">
+      <div ng-message="required">This is required.</div>
+    </div>
+  </md-input-container>
+  <md-input-container>
+    <label>Author</label>
+    <input required name="author" ng-model="wiki.author">
+    <div ng-messages="newWikiForm.author.$error">
+      <div ng-message="required">This is required.</div>
+    </div>
+  </md-input-container>
+  <md-input-container flex>
+    <label>Body</label>
+    <textarea required name="body" ng-model="wiki.body" columns="1"></textarea>
+    <div ng-messages="newWikiForm.body.$error">
+      <div ng-message="required">This is required.</div>
+    </div>
+  </md-input-container>
+  <md-button class="md-raised">Create</md-button>
+</form>

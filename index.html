@@ -7,18 +7,59 @@
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
 
   <script type="text/javascript" src="/assets/js/angular.js"></script>
+  <script type="text/javascript" src="/assets/js/angular-animate.js"></script>
+  <script type="text/javascript" src="/assets/js/angular-aria.js"></script>
   <script type="text/javascript" src="/assets/js/angular-resource.js"></script>
   <script type="text/javascript" src="/assets/js/angular-route.js"></script>
+  <script type="text/javascript" src="/assets/js/angular-material.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.5.0/angular-material-icons.min.js"></script> 
+
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
+  <link rel="stylesheet" type="text/css" href="/assets/css/angular-material.min.css">
+
   <title>Coded In Braam</title>
 </head>
-<body>
-  <ng-view></ng-view>
+<body layout="column" ng-controller="IndexCtrl as index">
+  <md-toolbar layout="row" class="md-whiteframe-z1" layout-padding  layout-align="center center">
+    <md-button class="menu" hide-gt-sm ng-click="toggleSidenav()" aria-label="Show Wikis List">
+      <ng-md-icon icon="menu" size="30" style="fill:#ffffff"></ng-md-icon> 
+    </md-button>
+    <md-button aria-label="Homepage" href="#/home">
+      <md-tooltip>Go Home</md-tooltip>
+      <ng-md-icon icon="home" style="fill:#ffffff" size="30"></ng-md-icon>
+    </md-button>
+    <span flex="1"></span>
+    <h1 class="md-display-1">Coded In Braam</h1>
+    <span flex></span>
+    <md-button aria-label="Add" href="#/new">
+      <md-tooltip>Create new Wiki</md-tooltip>
+      <ng-md-icon icon="add" style="fill:#ffffff" size="30"></ng-md-icon>
+    </md-button>
+  </md-toolbar>
+  <section layout="row" flex>
+    <md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
+      <md-toolbar class="md-theme-indigo">
+        <h1 class="md-toolbar-tools">My Wiki's</h1>
+      </md-toolbar>
+      <md-list>
+        <md-list-item ng-repeat="wiki in wikis" ng-click="navigateTo('/wiki/'+$index)">
+          <h3 class="md-title">{{ wiki.title }}</h3>
+        </md-list-item>
+      </md-list>
+    </md-sidenav>
+    <md-content flex layout-padding>
+      <div layout="column" layout-fill layout-align="top center">
+        <ng-view></ng-view>
+      </div>
+    </md-content>
+  </section>
 
   <!-- App -->
   <script type="text/javascript" src="/assets/ng/app.js"></script>
 
   <!-- Controllers -->
   <script type="text/javascript" src="/assets/ng/controllers/index-ctrl.js"></script>
+  <script type="text/javascript" src="/assets/ng/controllers/wiki-ctrl.js"></script>
 
   <!-- Routes -->
   <script type="text/javascript" src="/assets/ng/routes.js"></script>
