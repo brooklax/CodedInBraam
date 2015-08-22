@@ -1,0 +1,141 @@
+<!-- Include the CSS and JS for Angular Material and its dependencies in our index.html -->
+<script type="text/javascript" src="/assets/js/angular-material.min.js"></script>
+<script type="text/javascript" src="/assets/js/angular-aria.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.5.0/angular-material-icons.min.js"></script>
+
+<link rel='stylesheet' href='//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
+<link rel="stylesheet" type="text/css" href="/assets/css/angular-material.min.css">
+
+
+<!-- Inject the new dependencies in our app.js file -->
+angular.module('codedInBraam', ['ngResource', 'ngRoute', 'ngAria', 'ngMaterial', 'ngMdIcons']);
+
+
+<!-- Create a wiki controller which will be used to list all the wikis, view data for a single wiki and in the future to create new wikis -->
+angular.module('codedInBraam')
+.controller('WikiNewCtrl', function($scope) {
+  // will be added once we include firebase
+})
+.controller('WikiShowCtrl', function($scope, $routeParams, WikiService) {
+  var id = parseInt($routeParams.wikiId);
+  $scope.wiki = WikiService.getWiki(id);
+});
+
+
+<!-- Source your new wiki controller in your index.html file -->
+<script type="text/javascript" src="/assets/ng/controllers/wiki-ctrl.js"></script>
+
+
+<!-- Now we need to create a template for our wikis. We'll do the 'show' template first -->
+<h3 class="md-display-1">{{ wiki.title }}</h3>
+<div>
+  <p>Created by <strong>{{ wiki.author }}</strong></p>
+  <p>{{ wiki.body }}</p>
+</div>
+
+
+<!-- Now let's do the 'new' template -->
+<p>Create a new Wiki</p>
+<form name="newWikiForm">
+  <md-input-container>
+    <label>Title</label>
+    <input required name="title" ng-model="wiki.title">
+    <div ng-messages="newWikiForm.title.$error">
+      <div ng-message="required">This is required.</div>
+    </div>
+  </md-input-container>
+  <md-input-container>
+    <label>Author</label>
+    <input required name="author" ng-model="wiki.author">
+    <div ng-messages="newWikiForm.author.$error">
+      <div ng-message="required">This is required.</div>
+    </div>
+  </md-input-container>
+  <md-input-container flex>
+    <label>Body</label>
+    <textarea required name="body" ng-model="wiki.body" columns="1"></textarea>
+    <div ng-messages="newWikiForm.body.$error">
+      <div ng-message="required">This is required.</div>
+    </div>
+  </md-input-container>
+  <md-button class="md-raised">Create</md-button>
+</form>
+
+
+<!-- Update our index controller with the dependencies we require for ngMaterial -->
+angular.module('codedInBraam').controller('IndexCtrl', function(WikiService, $scope, $location, $mdSidenav) {
+
+
+<!-- Add functions to our index controller to handle navigating to different routes in our app -->
+$scope.navigateTo = function(destinationPath) {
+  $scope.toggleSidenav();
+  $location.path(destinationPath);
+};
+
+$scope.toggleSidenav = function() {
+  $mdSidenav("left").toggle();
+};
+
+
+<!-- Update the index route to look like this -->
+.when('/home', {
+  controller: 'IndexCtrl',
+  templateUrl: "/assets/ng/templates/index.html"
+})
+
+
+<!-- Add new routes for creating and viewing wiki's -->
+.when('/new', {
+  controller: 'WikiNewCtrl',
+  templateUrl: "/assets/ng/templates/wiki-new.html"
+})
+.when('/wiki/:wikiId', {
+  controller: 'WikiShowCtrl',
+  templateUrl: '/assets/ng/templates/wiki-show.html'
+})
+
+
+<!-- Update the catch all route (.otherwise) to redirect to your index route -->
+.otherwise({
+  redirectTo: '/home'
+});
+
+
+<!-- Add some markup to our index.html just after the <body> element -->
+<md-toolbar layout="row" class="md-whiteframe-z1" layout-padding  layout-align="center center">
+  <md-button class="menu" hide-gt-sm ng-click="toggleSidenav()" aria-label="Show Wikis List">
+    <ng-md-icon icon="menu" size="30" style="fill:#ffffff"></ng-md-icon> 
+  </md-button>
+  <md-button aria-label="Homepage" href="#/home">
+    <md-tooltip>Go Home</md-tooltip>
+    <ng-md-icon icon="home" style="fill:#ffffff" size="30"></ng-md-icon>
+  </md-button>
+  <span flex="1"></span>
+  <h1 class="md-display-1">Coded In Braam</h1>
+  <span flex></span>
+  <md-button aria-label="Add" href="#/new">
+    <md-tooltip>Create new Wiki</md-tooltip>
+    <ng-md-icon icon="add" style="fill:#ffffff" size="30"></ng-md-icon>
+  </md-button>
+</md-toolbar>
+<section layout="row" flex>
+  <md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
+    <md-toolbar class="md-theme-indigo">
+      <h1 class="md-toolbar-tools">My Wiki's</h1>
+    </md-toolbar>
+    <md-list>
+      <md-list-item ng-repeat="wiki in wikis" ng-click="navigateTo('/wiki/'+$index)">
+        <h3 class="md-title">{{ wiki.title }}</h3>
+      </md-list-item>
+    </md-list>
+  </md-sidenav>
+  <md-content flex layout-padding>
+    <div layout="column" layout-fill layout-align="top center">
+      <ng-view></ng-view>
+    </div>
+  </md-content>
+</section>
+
+
+<!-- Add the following to the <body> element within the index.html -->
+layout="column" ng-controller="IndexCtrl as index"

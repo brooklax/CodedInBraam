@@ -1,0 +1,68 @@
+<!-- Source the firebase files in our index.html -->
+<script src="//cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+<script src="//cdn.firebase.com/libs/angularfire/1.1.2/angularfire.min.js"></script>
+
+<!-- Update the dependencies in the app.js file for firebase -->
+angular.module('codedInBraam', ['ngResource', 'ngRoute', 'ngAria', 'ngMaterial', 'ngMdIcons', 'firebase'])
+
+
+<!-- Add a constant to our app.js file for our firebase data store url -->
+.constant('fb', {
+  url: 'put your firebase url here'
+});
+
+
+<!-- Update our wiki service dependencies for firebase -->
+angular.module('codedInBraam').service('WikiService', function($location, $firebaseArray, $firebaseObject, fb) {
+
+
+<!-- Remove the data json object we create in the wiki service as our data source will now be firebase instead -->
+var data = {
+  "wikis": [
+    ..snip..
+  ]
+};
+
+
+<!-- Update our getAllWikis function in our wiki service with the following -->
+var ref = new Firebase(fb.url + '/wikis');
+return $firebaseArray(ref);
+
+<!-- Update our getWiki function in our wiki service with the following -->
+var ref = new Firebase(fb.url + '/wikis/' + wikiId);
+return $firebaseObject(ref);
+
+<!-- Create a 'createWiki' function in our wiki service  -->
+this.createWiki = function(wiki) {
+  var ref = new Firebase(fb.url + '/wikis');
+  var wikis = $firebaseArray(ref);
+  wikis.$add(wiki)
+  .then(function(response) {
+    var id = response.key();
+    $location.path('/wiki/' + id);
+  })
+  .catch(function(error) {
+    console.log("An error occured" + error)
+  })
+  .finally(function() {
+    // unlock any DOM elements if necessary
+  });
+};
+
+
+<!-- Inject the 'WikiService' into the new wiki controller and add the following function to the controller -->
+$scope.newWiki = function(wikiData) {
+  WikiService.createWiki(wikiData);
+};
+
+
+<!-- In the new wiki controller update the id we retrieve from the routeParams to be parsed as a string -->
+var id = $routeParams.wikiId.toString();
+
+
+<!-- Add an ngSubmit to the new wiki template which on submit calls the newWiki function in our new wiki controller -->
+ng-submit="newWiki(wiki)"
+
+
+<!-- Update the ngClick directive in our md-list-item to use wiki.$id instead of $index -->
+<md-list-item ng-repeat="wiki in wikis" ng-click="navigateTo('/wiki/'+wiki.$id)">
