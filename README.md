@@ -33,8 +33,8 @@ File Structure of the app:
 
 #### To begin
 ##### Clone the repo
-Clone the repository into a directory on your computer. Familiarise yourself with the file structure.
+- Clone the repository into a directory on your computer. Familiarise yourself with the file structure.
 
 ##### Choose a starting point and work from there
-Build something!
+- Build something!
 
