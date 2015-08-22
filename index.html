@@ -12,7 +12,9 @@
   <script type="text/javascript" src="/assets/js/angular-resource.js"></script>
   <script type="text/javascript" src="/assets/js/angular-route.js"></script>
   <script type="text/javascript" src="/assets/js/angular-material.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.5.0/angular-material-icons.min.js"></script> 
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.5.0/angular-material-icons.min.js"></script>
+  <script src="//cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+  <script src="//cdn.firebase.com/libs/angularfire/1.1.2/angularfire.min.js"></script>
 
   <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
   <link rel="stylesheet" type="text/css" href="/assets/css/angular-material.min.css">
@@ -42,7 +44,7 @@
         <h1 class="md-toolbar-tools">My Wiki's</h1>
       </md-toolbar>
       <md-list>
-        <md-list-item ng-repeat="wiki in wikis" ng-click="navigateTo('/wiki/'+$index)">
+        <md-list-item ng-repeat="wiki in wikis" ng-click="navigateTo('/wiki/'+wiki.$id)">
           <h3 class="md-title">{{ wiki.title }}</h3>
         </md-list-item>
       </md-list>
