@@ -1,5 +1,7 @@
 ### Coded In Braam AngularFire app
 
+The final app will look like this: https://codedinbraam.firebaseapp.com/
+
 File Structure of the app:
 
 - assets
